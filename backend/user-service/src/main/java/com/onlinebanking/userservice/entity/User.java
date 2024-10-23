@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -21,10 +22,10 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String password;
-    @Column(unique = true, nullable = false)
-    private String email;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<UserRole> userRoles;
 
     // Automatically set the timestamps for created and updated times
     @PrePersist

@@ -13,9 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class UserDto {
-
     private String username;
-    private String email;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 }

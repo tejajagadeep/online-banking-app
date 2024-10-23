@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "user_roles")
+@Table(name = "user_roles",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"})) // Ensure uniqueness on user_id and role_id
 @Data
 public class UserRole {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userRoleId;

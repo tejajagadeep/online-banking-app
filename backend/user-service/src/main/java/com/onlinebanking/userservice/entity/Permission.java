@@ -9,23 +9,20 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "permissions")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role {
+public class Permission {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roleId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Add this if you're auto-generating IDs
+    private Long permissionId;
 
     @Column(unique = true, nullable = false)
-    private String roleName;
+    private String permissionName;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
-    private List<UserRole> userRoles;
-
-    @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "permission", fetch = FetchType.EAGER)
     private List<RolePermission> rolePermissions;
 }
