@@ -1,6 +1,6 @@
 package com.onlinebanking.userservice.repository;
 
-import com.onlinebanking.userservice.entity.RolePermission;
+import com.onlinebanking.userservice.model.RolePermission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

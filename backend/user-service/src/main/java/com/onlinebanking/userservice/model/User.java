@@ -1,4 +1,4 @@
-package com.onlinebanking.userservice.entity;
+package com.onlinebanking.userservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;

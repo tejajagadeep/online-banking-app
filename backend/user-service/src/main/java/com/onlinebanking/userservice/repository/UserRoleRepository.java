@@ -1,6 +1,6 @@
 package com.onlinebanking.userservice.repository;
 
-import com.onlinebanking.userservice.entity.UserRole;
+import com.onlinebanking.userservice.model.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

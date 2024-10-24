@@ -1,4 +1,4 @@
-package com.onlinebanking.userservice.entity;
+package com.onlinebanking.userservice.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,4 +26,5 @@ public class RolePermission {
     @ManyToOne
     @JoinColumn(name = "permission_id", nullable = false) // This is the foreign key column in the DB
     private Permission permission; // Reference to the Permission entity, not permissionId
+
 }

@@ -1,13 +1,12 @@
 package com.onlinebanking.userservice.service;
 
+import com.onlinebanking.userservice.dto.RegisterUserDto;
 import com.onlinebanking.userservice.dto.UserDto;
-import com.onlinebanking.userservice.entity.User;
-import org.springframework.http.ResponseEntity;
+import com.onlinebanking.userservice.dto.UserPasswordDto;
 
 public interface UserService {
-    UserDto updateUserDetails(String username, UserDto userDto);
 
-    UserDto createUser(User user);
+    UserDto createUser(RegisterUserDto registerUserDto);
 
-    Object getUserDetails(String username);
+    UserDto changePassword(UserPasswordDto userPasswordDto);
 }

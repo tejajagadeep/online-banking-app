@@ -1,11 +1,13 @@
 package com.onlinebanking.userservice.controller;
 
-import com.onlinebanking.userservice.dto.UserDto;
-import com.onlinebanking.userservice.entity.User;
+import com.onlinebanking.userservice.dto.RegisterUserDto;
+import com.onlinebanking.userservice.dto.UserPasswordDto;
 import com.onlinebanking.userservice.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,17 +26,14 @@ public class UserController {
         return "Hello from User Service!";
     }
 
-    @PostMapping ResponseEntity<Object> createUser(@RequestBody User user){
-        return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
+    @PostMapping("/register")
+    ResponseEntity<Object> createUser(@Valid @RequestBody RegisterUserDto registerUserDto){
+        return new ResponseEntity<>(userService.createUser(registerUserDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/username/{username}")
-    public ResponseEntity<Object> getUserDetails(@PathVariable String username){
-        return ResponseEntity.ok(userService.getUserDetails(username));
-    }
-
-    @PutMapping("/username/{username}")
-    public ResponseEntity<Object> updateUserDetails(@PathVariable String username, @RequestBody UserDto userDto){
-        return ResponseEntity.ok(userService.updateUserDetails(username, userDto));
+    @PutMapping("/change-password")
+    @PreAuthorize("hasAnyAuthority('CREATE_ACCOUNT')")
+    public ResponseEntity<Object> changePassword(@Valid @RequestBody UserPasswordDto userPasswordDto){
+        return ResponseEntity.ok(userService.changePassword(userPasswordDto));
     }
 }

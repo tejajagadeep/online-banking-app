@@ -1,44 +1,63 @@
 package com.onlinebanking.userservice.service;
 
-import com.onlinebanking.userservice.dto.UserDetailsDto;
+import com.onlinebanking.userservice.dto.RegisterUserDto;
 import com.onlinebanking.userservice.dto.UserDto;
-import com.onlinebanking.userservice.entity.User;
+import com.onlinebanking.userservice.dto.UserPasswordDto;
+import com.onlinebanking.userservice.exception.MatchingPasswordException;
+import com.onlinebanking.userservice.model.User;
+import com.onlinebanking.userservice.exception.IncorrectPasswordException;
+import com.onlinebanking.userservice.exception.UserNotFoundException;
+import com.onlinebanking.userservice.exception.UsernameAlreadyExistsException;
 import com.onlinebanking.userservice.repository.UserRepository;
-import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 @Log4j2
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
+    @Override
+    public UserDto createUser(RegisterUserDto registerUserDto) {
+
+        userRepository.findByUsername(registerUserDto.getUsername())
+                .ifPresent(user1 -> {
+                    log.info("User already Exist : "+ registerUserDto.getUsername());
+                    throw new UsernameAlreadyExistsException(registerUserDto.getUsername()+" Username already exists");
+                });
+
+        User user = new User();
+        user.setUsername(registerUserDto.getUsername());
+        user.setPassword(bCryptPasswordEncoder.encode(registerUserDto.getPassword()));
+
+        return modelMapper.map(userRepository.save(user), UserDto.class);
     }
 
     @Override
-    public UserDto updateUserDetails(String username, UserDto userDto) {
-        return null;
-    }
+    public UserDto changePassword(UserPasswordDto userPasswordDto) {
 
-    @Override
-    public UserDto createUser(User user) {
-        userRepository.save(user);
-        log.info(user.toString());
-        return modelMapper.map(user, UserDto.class);
-    }
+        User user = userRepository.findByUsername(userPasswordDto.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + userPasswordDto.getOldPassword()));
 
-    @Override
-    public Object getUserDetails(String username) {
-        return userRepository.findByUsername(username);
+        if (userPasswordDto.getOldPassword().equals(userPasswordDto.getNewPassword())) {
+            throw new MatchingPasswordException("Old password and new password are same");
+        }
+
+        if (bCryptPasswordEncoder.matches(userPasswordDto.getOldPassword(), user.getPassword())) {
+            user.setPassword(bCryptPasswordEncoder.encode(userPasswordDto.getNewPassword()));
+            return modelMapper.map(userRepository.save(user), UserDto.class);
+        } else {
+            throw new IncorrectPasswordException("Incorrect password");
+        }
+
     }
 
 }
