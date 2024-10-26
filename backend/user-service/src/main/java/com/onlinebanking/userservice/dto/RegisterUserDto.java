@@ -11,7 +11,7 @@ import lombok.Setter;
 public class RegisterUserDto {
 
     @NotEmpty(message = "username is required field")
-    @Size(min = 6, max = 15, message = "username should be between 5 and 10 characters")
+    @Size(min = 5, max = 15, message = "username should be between 5 and 10 characters")
     private String username;
 
     @NotEmpty(message = "Password is required field")

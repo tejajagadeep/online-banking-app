@@ -6,13 +6,13 @@ import com.onlinebanking.userservice.dto.UserPasswordDto;
 import com.onlinebanking.userservice.exception.MatchingPasswordException;
 import com.onlinebanking.userservice.model.User;
 import com.onlinebanking.userservice.exception.IncorrectPasswordException;
-import com.onlinebanking.userservice.exception.UserNotFoundException;
 import com.onlinebanking.userservice.exception.UsernameAlreadyExistsException;
 import com.onlinebanking.userservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -23,20 +23,20 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDto createUser(RegisterUserDto registerUserDto) {
 
         userRepository.findByUsername(registerUserDto.getUsername())
                 .ifPresent(user1 -> {
-                    log.info("User already Exist : "+ registerUserDto.getUsername());
+                    log.info("User already Exist : {}", registerUserDto.getUsername());
                     throw new UsernameAlreadyExistsException(registerUserDto.getUsername()+" Username already exists");
                 });
 
         User user = new User();
         user.setUsername(registerUserDto.getUsername());
-        user.setPassword(bCryptPasswordEncoder.encode(registerUserDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
 
         return modelMapper.map(userRepository.save(user), UserDto.class);
     }
@@ -44,15 +44,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto changePassword(UserPasswordDto userPasswordDto) {
 
+
         User user = userRepository.findByUsername(userPasswordDto.getUsername())
-                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + userPasswordDto.getOldPassword()));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + userPasswordDto.getOldPassword()));
 
         if (userPasswordDto.getOldPassword().equals(userPasswordDto.getNewPassword())) {
             throw new MatchingPasswordException("Old password and new password are same");
         }
 
-        if (bCryptPasswordEncoder.matches(userPasswordDto.getOldPassword(), user.getPassword())) {
-            user.setPassword(bCryptPasswordEncoder.encode(userPasswordDto.getNewPassword()));
+        if (passwordEncoder.matches(userPasswordDto.getOldPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(userPasswordDto.getNewPassword()));
             return modelMapper.map(userRepository.save(user), UserDto.class);
         } else {
             throw new IncorrectPasswordException("Incorrect password");

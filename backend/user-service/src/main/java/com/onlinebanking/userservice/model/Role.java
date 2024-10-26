@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -24,8 +24,8 @@ public class Role {
     private String roleName;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
-    private List<UserRole> userRoles;
+    private Set<UserRole> userRoles;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
-    private List<RolePermission> rolePermissions;
+    private Set<RolePermission> rolePermissions;
 }

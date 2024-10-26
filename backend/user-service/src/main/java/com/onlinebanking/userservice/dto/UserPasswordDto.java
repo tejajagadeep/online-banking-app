@@ -11,7 +11,7 @@ import lombok.Setter;
 public class UserPasswordDto {
 
     @NotEmpty(message = "username is required field")
-    @Size(min = 6, max = 15, message = "username is invalid")
+    @Size(min = 5, max = 15, message = "username is invalid")
     private String username;
 
     @NotEmpty(message = "Password is required field")

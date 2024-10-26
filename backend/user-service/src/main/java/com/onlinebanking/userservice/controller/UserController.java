@@ -22,6 +22,7 @@ public class UserController {
     }
 
     @GetMapping("/hello")
+    @PreAuthorize("hasAuthority('SCOPE_CREATE_ACCOUNT')")
     public String hello() {
         return "Hello from User Service!";
     }
@@ -36,4 +37,5 @@ public class UserController {
     public ResponseEntity<Object> changePassword(@Valid @RequestBody UserPasswordDto userPasswordDto){
         return ResponseEntity.ok(userService.changePassword(userPasswordDto));
     }
+
 }
