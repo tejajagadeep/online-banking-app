@@ -36,10 +36,18 @@ public class JwtTokenGenerator {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("tejajagdeep")
                 .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
+                .expiresAt(Instant.now().plus(15, ChronoUnit.HOURS))
                 .subject(authentication.getName())
-                .claim("role", roles)
-                .claim("scope", permissions)
+                .claim("roles", roles
+//                        .stream()
+//                        .map(role -> "ROLE_"+role)
+//                        .collect(Collectors.toSet())
+                )
+                .claim("scopes", permissions
+//                        .stream()
+//                        .map(scope -> "SCOPE_"+scope)
+//                        .collect(Collectors.toSet())
+                )
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

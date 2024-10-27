@@ -9,40 +9,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1.0/user")
 public class TestController {
 
-
     @GetMapping("/hello1")
-    @PreAuthorize("hasAuthority('SCOPE_CREATE_ACCOUNT')") // Check for specific scope
+    @PreAuthorize("hasAuthority('CREATE_ACCOUNT')") // working with authority // working as expected
     public String hello1() {
         return "Hello1 from User Service!";
     }
 
     @GetMapping("/hello2")
-    @PreAuthorize("hasRole('AUDITOR')") // Check for AUDITOR role
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')") // working with role // not working as expected
     public String hello2() {
         return "Hello2 from User Service!";
     }
 
     @GetMapping("/hello3")
-    @PreAuthorize("hasRole('ANALYZE_FINANCIAL_DATA')") // Check for ANALYZE_FINANCIAL_DATA role
+    @PreAuthorize("hasRole('CUSTOMER')") // working with Role // working as expected
     public String hello3() {
         return "Hello3 from User Service!";
     }
 
     @GetMapping("/hello4")
-    @PreAuthorize("hasAuthority('SCOPE_CREATE_ACCOUNT') and hasRole('ANALYZE_FINANCIAL_DATA')") // Check for both
+    @PreAuthorize("hasAuthority('VIEW_ACCOUNT')") // working with authority // working as expected
     public String hello4() {
         return "Hello4 from User Service!";
     }
 
     @GetMapping("/hello5")
-    @PreAuthorize("hasAuthority('SCOPE_CREATE_ACCOUNT') or hasRole('AUDITOR')") // Check for either
+    @PreAuthorize("hasRole('SCOPE_PAY_BILLS')") // forbidden // working as expected
     public String hello5() {
         return "Hello5 from User Service!";
     }
 
     @GetMapping("/hello6")
-    @PreAuthorize("hasAuthority('SCOPE_CREATE_ACCOUNT') and hasRole('AUDITOR')") // Check for both
+    @PreAuthorize("hasRole('VIEW_ACCOUNT')") // forbidden // working as expected
     public String hello6() {
         return "Hello6 from User Service!";
+    }
+
+    @GetMapping("/hello7")
+    @PreAuthorize("hasAuthority('SCOPE_VIEW_ACCOUNT')") // forbidden // working as expected
+    public String hello7() {
+        return "Hello7 from User Service!";
+    }
+
+    @GetMapping("/hello8")
+    @PreAuthorize("hasAuthority('CUSTOMER')") // forbidden // working as expected
+    public String hello8() {
+        return "Hello8 from User Service!";
     }
 }

@@ -6,13 +6,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
 import java.util.*;
 
 @RequiredArgsConstructor
-public class UserDetailsImpl implements UserDetails, Serializable {
+public class UserDetailsImpl implements UserDetails {
 
-    private transient User user;
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

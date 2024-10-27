@@ -17,7 +17,6 @@ public class AuthenticationController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<Object> authenticateUser(Authentication authentication){
-
-        return ResponseEntity.ok(authService.getJwtTokensAfterAuthentication(authentication));
+        return ResponseEntity.ok(authService.getJwtTokensAfterAuthentication(authentication).getAccessToken());
     }
 }
