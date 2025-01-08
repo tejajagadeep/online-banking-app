@@ -1,0 +1,279 @@
+erDiagram
+    %% Existing entities
+    CUSTOMER ||--o{ ACCOUNT : "owns"
+    CUSTOMER ||--o{ LOAN : "applies for"
+    ACCOUNT ||--o{ TRANSACTION : "has"
+    LOAN ||--o{ PAYMENT : "receives"
+    BRANCH ||--o{ EMPLOYEE : "employs"
+    BRANCH ||--o{ ACCOUNT : "holds"
+    EMPLOYEE ||--o{ TRANSACTION : "processes"
+
+    %% Netbanking entities and relationships
+    CUSTOMER ||--o{ NETBANKING_CREDENTIALS : "has"
+    NETBANKING_CREDENTIALS ||--o{ ONLINE_SESSION : "creates"
+    NETBANKING_CREDENTIALS ||--o{ ONLINE_TRANSACTION : "initiates"
+    ACCOUNT ||--o{ ONLINE_TRANSACTION : "affected by"
+
+    %% New entities and relationships
+    CUSTOMER ||--o{ CREDIT_CARD : "has"
+    CREDIT_CARD ||--o{ CREDIT_CARD_TRANSACTION : "includes"
+    CREDIT_CARD ||--o{ CREDIT_CARD_PAYMENT : "receives"
+
+    CUSTOMER ||--o{ INVESTMENT_ACCOUNT : "owns"
+    INVESTMENT_ACCOUNT ||--o{ INVESTMENT_TRANSACTION : "has"
+
+    CUSTOMER ||--o{ INSURANCE_POLICY : "purchases"
+    INSURANCE_POLICY ||--o{ CLAIM : "has"
+
+    CUSTOMER ||--o{ SUPPORT_TICKET : "creates"
+    EMPLOYEE ||--o{ SUPPORT_TICKET : "handles"
+
+    CUSTOMER ||--o{ KYC_INFORMATION : "provides"
+    CUSTOMER ||--o{ AML_CHECK : "undergoes"
+
+    CUSTOMER ||--o{ NOTIFICATION : "receives"
+    CUSTOMER ||--o{ ALERT_PREFERENCE : "sets"
+
+    EMPLOYEE ||--o{ AUDIT_LOG : "generates"
+
+    CUSTOMER ||--o{ PRIVACY_CONSENT : "gives"
+
+    CUSTOMER }o--|| BUSINESS_CUSTOMER : "may be"
+
+    BUSINESS_CUSTOMER ||--o{ CORPORATE_ACCOUNT : "holds"
+    BUSINESS_CUSTOMER ||--o{ SIGNATORY : "authorizes"
+    SIGNATORY ||--o{ CORPORATE_ACCOUNT : "manages"
+
+    %% Entity definitions (partial)
+    CREDIT_CARD {
+        int credit_card_id PK
+        int customer_id FK
+        string card_number
+        date expiration_date
+        float credit_limit
+        float current_balance
+        string status
+    }
+    CREDIT_CARD_TRANSACTION {
+        int cc_transaction_id PK
+        int credit_card_id FK
+        date transaction_date
+        float amount
+        string merchant
+        string description
+    }
+    CREDIT_CARD_PAYMENT {
+        int cc_payment_id PK
+        int credit_card_id FK
+        date payment_date
+        float amount
+        string method
+    }
+    INVESTMENT_ACCOUNT {
+        int investment_account_id PK
+        int customer_id FK
+        string account_type
+        float balance
+        date open_date
+    }
+    INVESTMENT_TRANSACTION {
+        int investment_transaction_id PK
+        int investment_account_id FK
+        date transaction_date
+        string transaction_type
+        float amount
+        string security
+        int quantity
+        float price
+    }
+    INSURANCE_POLICY {
+        int policy_id PK
+        int customer_id FK
+        string policy_type
+        float coverage_amount
+        date start_date
+        date end_date
+        string status
+    }
+    CLAIM {
+        int claim_id PK
+        int policy_id FK
+        date claim_date
+        string claim_type
+        float amount
+        string status
+        string description
+    }
+    SUPPORT_TICKET {
+        int ticket_id PK
+        int customer_id FK
+        int employee_id FK
+        date created_on
+        string subject
+        string status
+        string description
+    }
+    KYC_INFORMATION {
+        int kyc_id PK
+        int customer_id FK
+        string document_type
+        string document_number
+        date verification_date
+        string status
+    }
+    AML_CHECK {
+        int aml_id PK
+        int customer_id FK
+        date check_date
+        string result
+        string notes
+    }
+    NOTIFICATION {
+        int notification_id PK
+        int customer_id FK
+        date sent_on
+        string channel
+        string message
+        string status
+    }
+    ALERT_PREFERENCE {
+        int preference_id PK
+        int customer_id FK
+        bool email_alerts
+        bool sms_alerts
+        bool push_notifications
+    }
+    AUDIT_LOG {
+        int audit_id PK
+        int employee_id FK
+        string action
+        date action_date
+        string details
+    }
+    PRIVACY_CONSENT {
+        int consent_id PK
+        int customer_id FK
+        date consent_date
+        string consent_type
+        string status
+    }
+    BUSINESS_CUSTOMER {
+        int business_customer_id PK
+        string business_name
+        string registration_number
+        string address
+        string phone_number
+        string email
+    }
+    CORPORATE_ACCOUNT {
+        int corporate_account_id PK
+        int business_customer_id FK
+        string account_number
+        string account_type
+        float balance
+        date open_date
+        string status
+    }
+    SIGNATORY {
+        int signatory_id PK
+        int business_customer_id FK
+        string first_name
+        string last_name
+        string position
+        string phone_number
+        string email
+    }
+
+    
+    NETBANKING_CREDENTIALS {
+        int credentials_id PK
+        int customer_id FK
+        string username
+        string password_hash
+        string security_question
+        string security_answer_hash
+        date created_on
+        date last_login
+        bool is_active
+    }
+    ONLINE_SESSION {
+        int session_id PK
+        int credentials_id FK
+        datetime login_time
+        datetime logout_time
+        string ip_address
+        string device_info
+    }
+    ONLINE_TRANSACTION {
+        int online_transaction_id PK
+        int account_id FK
+        int credentials_id FK
+        date transaction_date
+        float amount
+        string transaction_type
+        string description
+        string status
+    }
+
+    EMPLOYEE {
+        int employee_id PK
+        string first_name
+        string last_name
+        string position
+        date hire_date
+        int branch_id FK
+        string email
+        string phone_number
+    }
+    ACCOUNT {
+        int account_id PK
+        int account_number
+        string account_type
+        float balance
+        date open_date
+        int customer_id FK
+        int branch_id FK
+        string status
+    }
+    LOAN {
+        int loan_id PK
+        string loan_type
+        float principal_amount
+        float interest_rate
+        date start_date
+        date end_date
+        int customer_id FK
+        string status
+    }
+    TRANSACTION {
+        int transaction_id PK
+        int account_id FK
+        int employee_id FK
+        date transaction_date
+        float amount
+        string transaction_type
+        string description
+    }
+    PAYMENT {
+        int payment_id PK
+        int loan_id FK
+        date payment_date
+        float amount
+        string payment_method
+    }
+    BRANCH {
+        int branch_id PK
+        string branch_name
+        string address
+        string phone_number
+        string branch_manager
+    }
+     CUSTOMER {
+        int customer_id PK
+        string first_name
+        string last_name
+        date date_of_birth
+        string address
+        string phone_number
+        string email
+    }

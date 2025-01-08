@@ -13,9 +13,10 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>parent-pom</name>
-    <description>Parent Pom common dependencies for core microservices of Online Banking Project</description>
+    <description>A parent POM for the online banking application, serving as the central configuration and dependency management hub. It provides common settings, versions, and dependencies for all child modules, ensuring consistency and simplifying project management.</description>
     <modules>
         <module>../user-service</module>
+        <module>../authentication-client</module>
     </modules>
     <url/>
     <licenses>

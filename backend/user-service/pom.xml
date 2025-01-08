@@ -11,7 +11,7 @@
 	<artifactId>user-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>user-service</name>
-	<description>User Service with user account details for Online Banking Project</description>
+	<description>A Spring Boot service that manages user roles and permissions for the online banking application. It generates authentication tokens to facilitate secure access and integrates with the authentication server to ensure proper user authorization.</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -62,6 +62,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
